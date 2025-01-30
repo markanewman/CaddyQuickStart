@@ -7,13 +7,18 @@ Not only do you need to know enough to use the right words, but you need to know
 So after a couple rounds this is what I hit on based on my experience and its suggestion.
 
 > Me: Can you help me with the steps to "Obtain a Let's Encrypt Certificate"?
->  ... {{We go around for a bit}} ...
+
+... {{We go around for a bit}} ...
+ 
 > Me: Is there a docker container that automatically does SSL reverse proxy?
-> ChatGPT ... {{suggestions that don't work}}[^self_fail] ... [Caddy](https://caddyserver.com/)
+
+> ChatGPT: ... {{suggestions that don't work}}[^self_fail] ...
+> 
+> ChatGP: Use [Caddy](https://caddyserver.com/)
 
 After a lot of back and forth [^missing_methods], I am left with this Demo.
 
-# Steps [^requirements]
+# DEMO [^requirements]
 
 1. Open a VS Code shell[^vscode_shell]
    * Ctrl + Shift + ~
@@ -48,8 +53,8 @@ After a lot of back and forth [^missing_methods], I am left with this Demo.
 [^rusty]: I have done this a _lot_ in the past, but not since Pre-COVID, so all my skills are rusty.
 [^foo]: I remember what it was like to have my "Google Foo" fail [^stacks].
 I need to get skilled enough to properly frame my question so that I don't have a "AI Foo" fail. 
-[^stacks] I also remember being chastised by my college'es librarian for using [Google Scholar](https://scholar.google.com/) because I can find everything I need in the [stacks](https://en.wikipedia.org/wiki/Library_stack).
-Funny thing that, they don't even have stacks to search now. 
+[^stacks]: I also remember being chastised by my college'es librarian for using [Google Scholar](https://scholar.google.com/) because I can find everything I need in the [stacks](https://en.wikipedia.org/wiki/Library_stack).
+Funny thing that, now they don't even _have_ stacks to search. 
 [^compile]: Just because it compiles, doesn't mean it does what you wanted.
 [^self_fail]: Just because it exists, doesn't mean _you_ can implement it [^hydroponic].
 [^hydroponic]: I know [hydroponic tomatoes](https://hydrobuilder.com/learn/hydroponic-tomatoes/) are a thing.
