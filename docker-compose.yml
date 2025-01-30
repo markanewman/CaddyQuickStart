@@ -1,0 +1,42 @@
+name: CaddyQuickStart
+
+networks:
+  net1:
+    driver: bridge
+  net2:
+    driver: bridge
+
+services:
+  testing:
+    pull_policy: build
+    image: debian:caddy-testing
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - net1
+  proxy:
+    hostname: proxy
+    image: caddy:2.9.1
+    networks:
+      - net1
+      - net2
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+  app1:
+    hostname: app1
+    image: nginx:1.27.3
+    networks:
+      - net2
+    volumes:
+      - ./app1.html:/usr/share/nginx/html/index.html:ro
+  app2:
+    hostname: app2
+    image: nginx:1.27.3
+    networks:
+      - net2
+    volumes:
+      - ./app2.html:/usr/share/nginx/html/index.html:ro
