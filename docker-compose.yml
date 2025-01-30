@@ -17,20 +17,29 @@ services:
       - net1
   proxy:
     hostname: proxy
-    image: caddy:2.9.1
+    image: lucaslorentz/caddy-docker-proxy:2.9.1
     networks:
       - net1
       - net2
     ports:
       - '80:80'
       - '443:443'
+    environment:
+      - CADDY_INGRESS_NETWORKS=net2
+    labels:
+      - "caddy=:80, :443"
+      - "caddy.abort="
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - /var/run/docker.sock:/var/run/docker.sock
   app1:
     hostname: app1
     image: nginx:1.27.3
     networks:
       - net2
+    labels:
+      - "caddy=domain.local"
+      - "caddy.reverse_proxy=app1:80"
+      - "caddy.tls=internal"
     volumes:
       - ./app1.html:/usr/share/nginx/html/index.html:ro
   app2:
@@ -38,5 +47,9 @@ services:
     image: nginx:1.27.3
     networks:
       - net2
+    labels:
+      - "caddy=admin.domain.local"
+      - "caddy.reverse_proxy=app2:80"
+      - "caddy.tls=internal"
     volumes:
       - ./app2.html:/usr/share/nginx/html/index.html:ro

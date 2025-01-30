@@ -52,7 +52,7 @@ After a lot of back and forth [^missing_methods], I am left with this Demo.
 
 [^rusty]: I have done this a _lot_ in the past, but not since Pre-COVID, so all my skills are rusty.
 [^foo]: I remember what it was like to have my "Google Foo" fail [^stacks].
-I need to get skilled enough to properly frame my question so that I don't have a "AI Foo" fail. 
+I need to get skilled enough to properly frame my question so that I don't have a "AI Foo" fail [^fail_v2]. 
 [^stacks]: I also remember being chastised by my college'es librarian for using [Google Scholar](https://scholar.google.com/) because I can find everything I need in the [stacks](https://en.wikipedia.org/wiki/Library_stack).
 Funny thing that, now they don't even _have_ stacks to search. 
 [^compile]: Just because it compiles, doesn't mean it does what you wanted.
@@ -71,3 +71,7 @@ I burnt a day with the AI.
 If you want to recreate the project from [first principles](https://en.wikipedia.org/wiki/First_principle), feel free to do the same.
 [^curl]: I wasted time on trying get around caching when I was moving from one backend service to two.
 Straight-up use `cURL`.
+[^fail_v2]: So... ChatGPT just informed me about [caddy-docker-proxy](https://github.com/lucaslorentz/caddy-docker-proxy).
+I spent **ALL DAY!!!** doing this carefully by hand, reading all the guides, understanding _in detail_ where all the pieces go together, carefully coxing the AI to give me help ... and it drops this on me.
+If you use the right image, the whole thing is just automatic.
+[Stand on someone else's sholders](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants), the view is better.
