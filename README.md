@@ -22,37 +22,72 @@ After a lot of back and forth [^missing_methods], I am left with this Demo.
 
 1. Open a VS Code shell[^vscode_shell]
    * Ctrl + Shift + ~
-2. Setup the Docker Compose stack
+2. Setup the Docker Compose stack (sub-domain version)
    ```
-   docker compose up -d
+   docker compose -f docker-compose.sub-domain.yml up -d
    ```
 3. Open up a shell to a container with `curl`[^curl]
    ```
    docker exec -it caddyquickstart-testing-1 bash
    ```
-3. Test connections and redirects under various scenaros.
+4. Test connections and redirects under various scenaros.
    ```bash
    IP=$(ping -c 1 proxy | awk -F'[()]' '/PING/{print $2}') &&  echo $IP
    echo "$IP domain.local" | tee -a "/etc/hosts"
    echo "$IP admin.domain.local" | tee -a "/etc/hosts"
-   curl $IP # (52) Empty reply ...
-   curl http://$IP # (52) Empty reply ...
-   curl -k https://$IP # (35) OpenSSL/3.0.15: error ...
+   curl -i $IP # (52) Empty reply ...
+   curl -i $IP/ # (52) Empty reply ...
+   curl -i http://$IP # (52) Empty reply ...
+   curl -i http://$IP/ # (52) Empty reply ...
+   curl -ik https://$IP # (35) OpenSSL/3.0.15: error ...
+   curl -ik https://$IP/ # (35) OpenSSL/3.0.15: error ...
    curl -i http://domain.local # HTTP/1.1 308 to https://domain.local/
+   curl -i http://domain.local/ # HTTP/1.1 308 to https://domain.local/
    curl -ik https://domain.local # HTTP/2 200 <body>App 1</body>
+   curl -ik https://domain.local/ # HTTP/2 200 <body>App 1</body>
    curl -i http://admin.domain.local # HTTP/1.1 308 to https://admin.domain.local/
+   curl -i http://admin.domain.local/ # HTTP/1.1 308 to https://admin.domain.local/
    curl -ik https://admin.domain.local # HTTP/2 200 <body>App 2</body>
+   curl -ik https://admin.domain.local/ # HTTP/2 200 <body>App 2</body>
    exit
    ```
-2. Cleanup the Docker Compose stack
+5. Cleanup the Docker Compose stack
    ```
-   docker compose down
+   docker compose -f docker-compose.sub-domain.yml down
+   docker rmi debian:caddy-testing
+   ```
+6. Repeat for the sub-path version
+   ```
+   docker compose -f docker-compose.sub-path.yml up -d
+   docker exec -it caddyquickstart-testing-1 bash
+   ```
+   ```bash
+   IP=$(ping -c 1 proxy | awk -F'[()]' '/PING/{print $2}') &&  echo $IP
+   echo "$IP domain.local" | tee -a "/etc/hosts"
+   curl -i $IP # (52) Empty reply ...
+   curl -i $IP/ # (52) Empty reply ...
+   curl -i http://$IP # (52) Empty reply ...
+   curl -i http://$IP/ # (52) Empty reply ...
+   curl -ik https://$IP # (35) OpenSSL/3.0.15: error ...
+   curl -ik https://$IP/ # (35) OpenSSL/3.0.15: error ...
+   curl -i http://domain.local # HTTP/1.1 308 to https://domain.local/
+   curl -i http://domain.local/ # HTTP/1.1 308 to https://domain.local/
+   curl -ik https://domain.local # HTTP/2 200 <body>App 1</body>
+   curl -ik https://domain.local/ # HTTP/2 200 <body>App 1</body>
+   curl -i http://domain.local/admin # HTTP/1.1 308 to https://domain.local/admin
+   curl -i http://domain.local/admin/ # HTTP/1.1 308 to https://domain.local/admin/
+   curl -ik https://domain.local/admin # HTTP/2 302 to https://domain.local/admin/
+   curl -ik https://domain.local/admin/ # HTTP/2 200 <body>App 2</body>
+   exit
+   ```
+   ```
+   docker compose -f docker-compose.sub-path.yml down
    docker rmi debian:caddy-testing
    ```
 
 [^rusty]: I have done this a _lot_ in the past, but not since Pre-COVID, so all my skills are rusty.
 [^foo]: I remember what it was like to have my "Google Foo" fail [^stacks].
-I need to get skilled enough to properly frame my question so that I don't have a "AI Foo" fail [^fail_v2]. 
+I need to get skilled enough to properly frame my question so that I don't have a "AI Foo" fail [^fail_v2] [^fail_v3]. 
 [^stacks]: I also remember being chastised by my college'es librarian for using [Google Scholar](https://scholar.google.com/) because I can find everything I need in the [stacks](https://en.wikipedia.org/wiki/Library_stack).
 Funny thing that, now they don't even _have_ stacks to search. 
 [^compile]: Just because it compiles, doesn't mean it does what you wanted.
@@ -75,3 +110,4 @@ Straight-up use `cURL`.
 I spent **ALL DAY!!!** doing this carefully by hand, reading all the guides, understanding _in detail_ where all the pieces go together, carefully coxing the AI to give me help ... and it drops this on me.
 If you use the right image, the whole thing is just automatic.
 [Stand on someone else's sholders](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants), the view is better.
+[^fail_v3]: And another 6 hours even with the AI on url reweites because of the [trailing /](https://en.wikipedia.org/wiki/URI_normalization).

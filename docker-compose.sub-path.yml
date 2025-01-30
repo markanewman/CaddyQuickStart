@@ -1,0 +1,61 @@
+name: CaddyQuickStart
+
+networks:
+  net1:
+    driver: bridge
+  net2:
+    driver: bridge
+
+services:
+  testing:
+    pull_policy: build
+    image: debian:caddy-testing
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - net1
+  proxy:
+    hostname: proxy
+    image: lucaslorentz/caddy-docker-proxy:2.9.1
+    networks:
+      - net1
+      - net2
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      - CADDY_INGRESS_NETWORKS=net2
+    labels:
+      - "caddy=:80, :443"
+      - "caddy.abort="
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  app1:
+    hostname: app1
+    image: nginx:1.27.3
+    networks:
+      - net2
+    labels:
+      - "caddy=domain.local"
+      - "caddy.handle="
+      - "caddy.handle.redir={scheme}://{host}/"
+      - "caddy.handle_path=/*"
+      - "caddy.handle_path.reverse_proxy=http://app1:80"
+      - "caddy.tls=internal"
+    volumes:
+      - ./app1.html:/usr/share/nginx/html/index.html:ro
+  app2:
+    hostname: app2
+    image: nginx:1.27.3
+    networks:
+      - net2
+    labels:
+      - "caddy=domain.local"
+      - "caddy.handle=/admin"
+      - "caddy.handle.redir={scheme}://{host}/admin/"
+      - "caddy.handle_path=/admin/*"
+      - "caddy.handle_path.reverse_proxy=http://app2:80"
+      - "caddy.tls=internal"
+    volumes:
+      - ./app2.html:/usr/share/nginx/html/index.html:ro
